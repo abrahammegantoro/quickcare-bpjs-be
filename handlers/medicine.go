@@ -19,7 +19,7 @@ type MedicineHandler struct {
 	usecase MedicineUsecase
 }
 
-func NewMedicineHandler(fiber *fiber.App, usecase MedicineUsecase) {
+func NewMedicineHandler(fiber *fiber.Group, usecase MedicineUsecase) {
 	handler := &MedicineHandler{
 		usecase: usecase,
 	}

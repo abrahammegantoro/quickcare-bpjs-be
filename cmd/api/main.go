@@ -29,15 +29,18 @@ func main() {
 
 	// repositories
 	medicineRepository := repositories.NewMedicineRepository(db)
+	referralRepository := repositories.NewReferralRepository(db)
 
 	// services
 	medicineService := usecases.NewMedicineUsecase(medicineRepository)
-
-	// handlers
-	handlers.NewMedicineHandler(app, medicineService)
+	referralService := usecases.NewReferralUsecase(referralRepository)
 
 	// routes
-	server := app.Group("/api/v1")
+	server := app.Group("/api/v1").(*fiber.Group)
+
+	// handlers
+	handlers.NewMedicineHandler(server, medicineService)
+	handlers.NewReferralHandler(server, referralService)
 
 	server.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
