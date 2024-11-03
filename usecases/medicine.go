@@ -4,19 +4,37 @@ import (
 	"context"
 
 	"github.com/abrahammegantoro/quickcare-bpjs-be/models"
-	"github.com/abrahammegantoro/quickcare-bpjs-be/repositories"
 )
 
-type MedicineUsecase struct {
-	repo repositories.MedicineRepository
+type MedicineRepository interface {
+	CreateMedicine(ctx context.Context, medicine *models.Medicine) (*models.Medicine, error)
+	GetAllMedicines(ctx context.Context) ([]*models.Medicine, error)
+	GetMedicineByID(ctx context.Context, id string) (*models.Medicine, error)
+	UpdateMedicine(ctx context.Context, id string, update map[string]interface{}) error
 }
 
-func NewMedicineUsecase(repo repositories.MedicineRepository) *MedicineUsecase {
+type MedicineUsecase struct {
+	medicineRepo MedicineRepository
+}
+
+func NewMedicineUsecase(medicineRepo MedicineRepository) *MedicineUsecase {
 	return &MedicineUsecase{
-		repo: repo,
+		medicineRepo: medicineRepo,
 	}
 }
 
 func (u *MedicineUsecase) CreateMedicine(ctx context.Context, medicine *models.Medicine) (*models.Medicine, error) {
-	return u.repo.CreateMedicine(ctx, medicine)
+	return u.medicineRepo.CreateMedicine(ctx, medicine)
+}
+
+func (u *MedicineUsecase) GetAllMedicines(ctx context.Context) ([]*models.Medicine, error) {
+	return u.medicineRepo.GetAllMedicines(ctx)
+}
+
+func (u *MedicineUsecase) GetMedicineByID(ctx context.Context, id string) (*models.Medicine, error) {
+	return u.medicineRepo.GetMedicineByID(ctx, id)
+}
+
+func (u *MedicineUsecase) UpdateMedicine(ctx context.Context, id string, update map[string]interface{}) error {
+	return u.medicineRepo.UpdateMedicine(ctx, id, update)
 }
